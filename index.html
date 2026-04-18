@@ -1,0 +1,365 @@
+
+<!DOCTYPE html>
+<html lang="es">
+   <head>
+      <meta charset="utf-8">
+      <meta http-equiv="X-UA-Compatible" content="IE=edge">
+      <meta name="viewport" content="width=device-width, initial-scale=1">
+      <title>FocusFlow Work — Tu espacio de concentración</title>
+      <meta name="description" content="FocusFlow Work es una herramienta de productividad con temporizador configurable, detección de inactividad y panel de estadísticas. Diseñada para personas con patrones de atención diversos.">
+      <!-- bootstrap css -->
+      <link rel="stylesheet" href="css/bootstrap.min.css">
+      <link rel="stylesheet" href="css/style.css">
+      <link rel="stylesheet" href="css/app/focusflow.css">
+      <link rel="stylesheet" href="css/responsive.css">
+      <link rel="icon" href="images/fevicon.png" type="image/gif">
+      <link rel="stylesheet" href="css/jquery.mCustomScrollbar.min.css">
+      <link rel="stylesheet" href="https://netdna.bootstrapcdn.com/font-awesome/4.0.3/css/font-awesome.css">
+
+      <style>
+        /* --- Landing: tarjetas de características --- */
+        .ff-features-grid {
+          display: grid;
+          grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+          gap: 24px;
+          margin-top: 10px;
+        }
+
+        .ff-feature-card {
+          background: #fff;
+          border-radius: 16px;
+          padding: 36px 28px;
+          text-align: center;
+          box-shadow: 0 4px 20px rgba(0,0,0,0.06);
+          transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .ff-feature-card:hover {
+          transform: translateY(-4px);
+          box-shadow: 0 8px 30px rgba(0,0,0,0.1);
+        }
+
+        .ff-feature-icon {
+          font-size: 48px;
+          margin-bottom: 16px;
+          line-height: 1;
+          color: #0891f8;
+        }
+
+        .ff-feature-card h4 {
+          font-family: 'Baloo Chettan', cursive;
+          font-size: 22px;
+          color: #252525;
+          margin-bottom: 10px;
+        }
+
+        .ff-feature-card p {
+          font-size: 15px;
+          color: #666;
+          line-height: 1.6;
+          margin: 0;
+        }
+
+        /* --- Landing: pasos --- */
+        .ff-steps {
+          display: flex;
+          justify-content: center;
+          gap: 40px;
+          flex-wrap: wrap;
+          margin-top: 10px;
+        }
+
+        .ff-step {
+          text-align: center;
+          max-width: 240px;
+        }
+
+        .ff-step-number {
+          width: 56px;
+          height: 56px;
+          border-radius: 50%;
+          background: #0891f8;
+          color: #fff;
+          font-family: 'Rajdhani', sans-serif;
+          font-size: 26px;
+          font-weight: 700;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          margin: 0 auto 16px;
+        }
+
+        .ff-step h4 {
+          font-family: 'Baloo Chettan', cursive;
+          font-size: 20px;
+          color: #272f43;
+          margin-bottom: 8px;
+        }
+
+        .ff-step p {
+          font-size: 14px;
+          color: #666;
+          line-height: 1.5;
+        }
+
+        /* --- Landing: CTA final --- */
+        .ff-cta-section {
+          text-align: center;
+          padding: 70px 20px;
+        }
+
+        .ff-cta-section h2 {
+          font-family: 'Baloo Chettan', cursive;
+          font-size: 36px;
+          color: #252525;
+          margin-bottom: 12px;
+        }
+
+        .ff-cta-section p {
+          font-size: 17px;
+          color: #666;
+          margin-bottom: 30px;
+          max-width: 500px;
+          margin-left: auto;
+          margin-right: auto;
+        }
+
+        .ff-cta-btn {
+          display: inline-block;
+          padding: 16px 44px;
+          background: #0891f8;
+          color: #fff;
+          font-family: 'Rajdhani', sans-serif;
+          font-size: 20px;
+          font-weight: 700;
+          border-radius: 50px;
+          text-decoration: none;
+          transition: background 0.3s ease, transform 0.15s ease;
+        }
+
+        .ff-cta-btn:hover {
+          background: #0770c7;
+          color: #fff;
+          text-decoration: none;
+          transform: scale(1.03);
+        }
+
+        /* --- Landing: navegación rápida --- */
+        .ff-quick-links {
+          display: flex;
+          justify-content: center;
+          gap: 16px;
+          flex-wrap: wrap;
+          margin-top: 24px;
+        }
+
+        .ff-quick-link {
+          display: inline-flex;
+          align-items: center;
+          gap: 8px;
+          padding: 10px 22px;
+          border: 2px solid #0891f8;
+          border-radius: 30px;
+          color: #0891f8;
+          font-weight: 600;
+          font-size: 15px;
+          text-decoration: none;
+          transition: all 0.3s ease;
+        }
+
+        .ff-quick-link:hover {
+          background: #0891f8;
+          color: #fff;
+          text-decoration: none;
+        }
+
+        @media (max-width: 768px) {
+          .ff-steps { gap: 24px; }
+          .ff-cta-section h2 { font-size: 28px; }
+        }
+      </style>
+   </head>
+   <body class="main-layout">
+      <!-- loader -->
+      <div class="loader_bg">
+         <div class="loader"><img src="images/loading.gif" alt="Cargando..." /></div>
+      </div>
+
+      <!-- Navbar -->
+      <nav class="ff-navbar" role="navigation" aria-label="Navegación principal">
+         <div class="ff-navbar-inner">
+            <a href="index.html" class="ff-navbar-logo">FocusFlow</a>
+            <ul class="ff-navbar-links" id="ff-nav-menu">
+               <li><a class="ff-nav-link ff-active" href="index.html" aria-current="page">Inicio</a></li>
+               <li><a class="ff-nav-link" href="focus.html">Enfoque</a></li>
+               <li><a class="ff-nav-link" href="dashboard.html">Panel</a></li>
+               <li><a class="ff-nav-link" href="profile.html">Perfil</a></li>
+               <li><a class="ff-nav-link" href="settings.html">Ajustes</a></li>
+            </ul>
+            <button class="ff-hamburger" id="ff-hamburger" aria-label="Abrir menú" aria-expanded="false" aria-controls="ff-nav-menu">
+               <span class="ff-hamburger-line"></span>
+               <span class="ff-hamburger-line"></span>
+               <span class="ff-hamburger-line"></span>
+            </button>
+         </div>
+         <div class="ff-navbar-wave" aria-hidden="true">
+            <svg viewBox="0 0 1440 20" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg">
+               <path d="M0,0 C360,20 1080,20 1440,0 L1440,0 L0,0 Z" fill="rgba(6,112,196,0.92)"/>
+            </svg>
+         </div>
+      </nav>
+      <div class="ff-nav-overlay" id="ff-nav-overlay"></div>
+      <!-- end navbar -->
+
+      <!-- header -->
+      <header>
+         <div class="head_top">
+            <!-- Banner / Hero -->
+            <section class="banner_main">
+               <div class="container-fluid">
+                  <div class="row d_flex">
+                     <div class="col-md-6">
+                        <div class="text-bg">
+                           <h1>Tu espacio de concentración</h1>
+                           <p>FocusFlow Work te ayuda a organizar tu tiempo con un temporizador flexible, recordatorios amables y un panel donde puedes ver tu progreso. Diseñado para adaptarse a tu forma de trabajar.</p>
+                           <a href="focus.html">Empezar ahora</a>
+                        </div>
+                     </div>
+                     <div class="col-md-6">
+                        <div class="text-img">
+                           <figure><img src="images/box_img.png" alt="Ilustración de productividad" /></figure>
+                        </div>
+                     </div>
+                  </div>
+               </div>
+            </section>
+         </div>
+      </header>
+      <!-- end banner -->
+      <!-- Características -->
+      <div class="business">
+         <div class="container">
+            <div class="row">
+               <div class="col-md-12">
+                  <div class="titlepage">
+                     <span>Herramientas que se adaptan a ti</span>
+                     <h2>Características principales</h2>
+                     <p>Todo lo que necesitas para mantener el enfoque, sin presiones ni complicaciones.</p>
+                  </div>
+               </div>
+            </div>
+            <div class="row">
+               <div class="col-md-12">
+                  <div class="ff-features-grid">
+                     <div class="ff-feature-card">
+                        <div class="ff-feature-icon"><i class="fa fa-clock-o" aria-hidden="true"></i></div>
+                        <h4>Temporizador flexible</h4>
+                        <p>Elige entre presets de 15, 25, 50 o 90 minutos, o configura tu propio tiempo. Incluye descansos automáticos y un sonido suave al terminar.</p>
+                     </div>
+                     <div class="ff-feature-card">
+                        <div class="ff-feature-icon"><i class="fa fa-eye" aria-hidden="true"></i></div>
+                        <h4>Recordatorios amables</h4>
+                        <p>Si detectamos que llevas un rato sin actividad, te enviamos un recordatorio amable para que decidas qué hacer. Sin juicios.</p>
+                     </div>
+                     <div class="ff-feature-card">
+                        <div class="ff-feature-icon"><i class="fa fa-bar-chart" aria-hidden="true"></i></div>
+                        <h4>Panel de progreso</h4>
+                        <p>Visualiza tus sesiones, tiempo efectivo e interrupciones con gráficos claros. Exporta tus datos en CSV o JSON cuando quieras.</p>
+                     </div>
+                     <div class="ff-feature-card">
+                        <div class="ff-feature-icon"><i class="fa fa-users" aria-hidden="true"></i></div>
+                        <h4>Perfiles múltiples</h4>
+                        <p>Crea perfiles separados para trabajo, estudio u otros contextos. Cada uno conserva sus propias estadísticas y preferencias.</p>
+                     </div>
+                  </div>
+               </div>
+            </div>
+         </div>
+      </div>
+      <!-- end business -->
+      <!-- Cómo funciona -->
+      <div class="projects">
+         <div class="container">
+            <div class="row">
+               <div class="col-md-12">
+                  <div class="titlepage">
+                     <span>Sencillo y sin fricciones</span>
+                     <h2>¿Cómo funciona?</h2>
+                     <p>Tres pasos para empezar a concentrarte</p>
+                  </div>
+               </div>
+            </div>
+            <div class="row">
+               <div class="col-md-12">
+                  <div class="ff-steps">
+                     <div class="ff-step">
+                        <div class="ff-step-number">1</div>
+                        <h4>Elige tu tiempo</h4>
+                        <p>Selecciona un preset o configura la duración que mejor se adapte a tu tarea actual.</p>
+                     </div>
+                     <div class="ff-step">
+                        <div class="ff-step-number">2</div>
+                        <h4>Enfócate</h4>
+                        <p>Activa el modo enfoque para minimizar distracciones. El temporizador hará el seguimiento por ti.</p>
+                     </div>
+                     <div class="ff-step">
+                        <div class="ff-step-number">3</div>
+                        <h4>Revisa tu progreso</h4>
+                        <p>Consulta el panel de estadísticas para descubrir tus patrones y celebrar tus logros.</p>
+                     </div>
+                  </div>
+               </div>
+            </div>
+         </div>
+      </div>
+      <!-- end projects -->
+      <!-- CTA final + navegación rápida -->
+      <div class="ff-cta-section">
+         <div class="container">
+            <h2>¿Listo para empezar?</h2>
+            <p>No necesitas crear una cuenta. Tus datos se guardan en tu navegador, de forma privada y sin servidores externos.</p>
+            <a href="focus.html" class="ff-cta-btn">Ir al temporizador <i class="fa fa-arrow-right" aria-hidden="true"></i></a>
+            <div class="ff-quick-links">
+               <a href="dashboard.html" class="ff-quick-link"><i class="fa fa-bar-chart" aria-hidden="true"></i> Panel</a>
+               <a href="profile.html" class="ff-quick-link"><i class="fa fa-user" aria-hidden="true"></i> Perfiles</a>
+               <a href="settings.html" class="ff-quick-link"><i class="fa fa-cog" aria-hidden="true"></i> Ajustes</a>
+            </div>
+         </div>
+      </div>
+      <!-- footer -->
+      <footer>
+         <div class="footer">
+            <div class="container">
+               <div class="row">
+                  <div class="col-md-12">
+                     <div class="cont">
+                        <h3><strong class="multi">FocusFlow</strong> Work</h3>
+                     </div>
+                  </div>
+
+               </div>
+            </div>
+            <div class="copyright">
+               <div class="container">
+                  <div class="row">
+                     <div class="col-md-12">
+                        <p class="ff-disclaimer">FocusFlow Work es una herramienta de apoyo a la productividad. No sustituye acompañamiento profesional.</p>
+                        <p>© 2026 FocusFlow Work</p>
+                     </div>
+                  </div>
+               </div>
+            </div>
+         </div>
+      </footer>
+
+      <!-- Javascript -->
+      <script src="js/jquery.min.js"></script>
+      <script src="js/popper.min.js"></script>
+      <script src="js/bootstrap.bundle.min.js"></script>
+      <script src="js/jquery-3.0.0.min.js"></script>
+      <script src="js/plugin.js"></script>
+      <script src="js/jquery.mCustomScrollbar.concat.min.js"></script>
+      <script src="js/custom.js"></script>
+   </body>
+</html>
+

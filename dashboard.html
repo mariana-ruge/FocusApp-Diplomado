@@ -1,0 +1,379 @@
+<!DOCTYPE html>
+<html lang="es">
+   <head>
+      <!-- basic -->
+      <meta charset="utf-8">
+      <meta http-equiv="X-UA-Compatible" content="IE=edge">
+      <!-- mobile metas -->
+      <meta name="viewport" content="width=device-width, initial-scale=1">
+      <!-- site metas -->
+      <title>Panel de seguimiento - FocusFlow Work</title>
+      <meta name="description" content="Visualiza tu rendimiento: sesiones completadas, tiempo de enfoque, interrupciones y racha de días consecutivos.">
+      <meta name="author" content="FocusFlow Work">
+      <!-- bootstrap css -->
+      <link rel="stylesheet" href="css/bootstrap.min.css">
+      <!-- style css (plantilla base) -->
+      <link rel="stylesheet" href="css/style.css">
+      <!-- FocusFlow css -->
+      <link rel="stylesheet" href="css/app/focusflow.css">
+      <!-- Responsive -->
+      <link rel="stylesheet" href="css/responsive.css">
+      <!-- favicon -->
+      <link rel="icon" href="images/fevicon.png" type="image/gif">
+      <!-- Scrollbar Custom CSS -->
+      <link rel="stylesheet" href="css/jquery.mCustomScrollbar.min.css">
+      <!-- FontAwesome -->
+      <link rel="stylesheet" href="https://netdna.bootstrapcdn.com/font-awesome/4.0.3/css/font-awesome.css">
+      <!-- Chart.js vía CDN -->
+      <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.7/dist/chart.umd.min.js"></script>
+
+      <!-- Estilos específicos del dashboard -->
+      <style>
+        /* --- Tarjetas de métricas --- */
+        .ff-metrics-grid {
+          display: grid;
+          grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+          gap: 16px;
+          margin-bottom: 36px;
+        }
+
+        .ff-metric-card {
+          background: var(--ff-white);
+          border-radius: var(--ff-radius-lg);
+          padding: 24px 20px;
+          text-align: center;
+          box-shadow: var(--ff-shadow);
+          transition: var(--ff-transition);
+          border-top: 3px solid transparent;
+        }
+
+        .ff-metric-card:hover {
+          transform: translateY(-2px);
+          box-shadow: var(--ff-shadow-lg);
+        }
+
+        .ff-metric-card.green  { border-top-color: var(--ff-green); }
+        .ff-metric-card.blue   { border-top-color: var(--ff-primary); }
+        .ff-metric-card.amber  { border-top-color: var(--ff-amber); }
+        .ff-metric-card.red    { border-top-color: var(--ff-red); }
+
+        .ff-metric-icon {
+          font-size: 28px;
+          margin-bottom: 8px;
+        }
+
+        .ff-metric-card.green .ff-metric-icon  { color: var(--ff-green); }
+        .ff-metric-card.blue .ff-metric-icon   { color: var(--ff-primary); }
+        .ff-metric-card.amber .ff-metric-icon  { color: var(--ff-amber); }
+        .ff-metric-card.red .ff-metric-icon    { color: var(--ff-red); }
+
+        .ff-metric-value {
+          font-family: 'Rajdhani', sans-serif;
+          font-size: 32px;
+          font-weight: 700;
+          line-height: 1.1;
+          color: var(--ff-text);
+        }
+
+        .ff-metric-label {
+          font-size: 13px;
+          color: var(--ff-text-light);
+          margin-top: 4px;
+          text-transform: uppercase;
+          letter-spacing: 0.5px;
+        }
+
+        /* --- Contenedor de gráficos --- */
+        .ff-chart-card {
+          background: var(--ff-white);
+          border-radius: var(--ff-radius-lg);
+          padding: 24px;
+          box-shadow: var(--ff-shadow);
+          margin-bottom: 24px;
+        }
+
+        .ff-chart-canvas-wrapper {
+          position: relative;
+          height: 280px;
+        }
+
+        /* --- Barra de acciones --- */
+        .ff-actions-bar {
+          display: flex;
+          justify-content: space-between;
+          align-items: center;
+          flex-wrap: wrap;
+          gap: 12px;
+          margin-bottom: 28px;
+        }
+
+        .ff-range-group {
+          display: flex;
+          gap: 6px;
+          flex-wrap: wrap;
+        }
+
+        .ff-range-btn {
+          font-family: var(--ff-font-body);
+          font-size: 14px;
+          font-weight: 600;
+          padding: 6px 16px;
+          border: 2px solid #ddd;
+          border-radius: var(--ff-radius);
+          background: var(--ff-white);
+          color: var(--ff-text-light);
+          cursor: pointer;
+          transition: var(--ff-transition);
+        }
+
+        .ff-range-btn:hover {
+          border-color: var(--ff-primary);
+          color: var(--ff-primary);
+        }
+
+        .ff-range-btn.active {
+          background: var(--ff-primary);
+          border-color: var(--ff-primary);
+          color: var(--ff-white);
+        }
+
+        .ff-range-btn:focus-visible {
+          outline: 3px solid var(--ff-primary);
+          outline-offset: 2px;
+        }
+
+        .ff-export-group {
+          display: flex;
+          gap: 8px;
+          flex-wrap: wrap;
+        }
+
+        @media (max-width: 576px) {
+          .ff-metrics-grid {
+            grid-template-columns: repeat(2, 1fr);
+            gap: 10px;
+          }
+
+          .ff-metric-card { padding: 16px 12px; }
+          .ff-metric-value { font-size: 26px; }
+
+          .ff-chart-canvas-wrapper { height: 220px; }
+
+          .ff-actions-bar {
+            flex-direction: column;
+            align-items: stretch;
+          }
+
+          .ff-range-group, .ff-export-group {
+            justify-content: center;
+          }
+        }
+      </style>
+   </head>
+   <!-- body -->
+   <body class="main-layout">
+      <!-- loader -->
+      <div class="loader_bg">
+         <div class="loader"><img src="images/loading.gif" alt="Cargando..." /></div>
+      </div>
+      <!-- end loader -->
+
+      <!-- header -->
+      <!-- Navbar -->
+      <nav class="ff-navbar" role="navigation" aria-label="Navegación principal">
+         <div class="ff-navbar-inner">
+            <a href="index.html" class="ff-navbar-logo">FocusFlow</a>
+            <ul class="ff-navbar-links" id="ff-nav-menu">
+               <li><a class="ff-nav-link" href="index.html">Inicio</a></li>
+               <li><a class="ff-nav-link" href="focus.html">Enfoque</a></li>
+               <li><a class="ff-nav-link ff-active" href="dashboard.html" aria-current="page">Panel</a></li>
+               <li><a class="ff-nav-link" href="profile.html">Perfil</a></li>
+               <li><a class="ff-nav-link" href="settings.html">Ajustes</a></li>
+            </ul>
+            <button class="ff-hamburger" id="ff-hamburger" aria-label="Abrir menú" aria-expanded="false" aria-controls="ff-nav-menu">
+               <span class="ff-hamburger-line"></span>
+               <span class="ff-hamburger-line"></span>
+               <span class="ff-hamburger-line"></span>
+            </button>
+         </div>
+         <div class="ff-navbar-wave" aria-hidden="true">
+            <svg viewBox="0 0 1440 20" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg">
+               <path d="M0,0 C360,20 1080,20 1440,0 L1440,0 L0,0 Z" fill="rgba(6,112,196,0.92)"/>
+            </svg>
+         </div>
+      </nav>
+      <div class="ff-nav-overlay" id="ff-nav-overlay"></div>
+      <!-- end navbar -->
+
+      <!-- Contenido principal -->
+      <main class="ff-main" id="main-content">
+         <div class="container">
+
+            <!-- Título de página -->
+            <div class="ff-page-title">
+               <h2>Panel de seguimiento</h2>
+               <p>Revisa tu progreso y encuentra tu mejor ritmo de trabajo.</p>
+            </div>
+
+            <!-- Barra de acciones: filtro + exportar -->
+            <div class="ff-actions-bar">
+               <div class="ff-range-group" role="group" aria-label="Filtrar por rango de tiempo">
+                  <button class="ff-range-btn" data-range="7d">7 días</button>
+                  <button class="ff-range-btn active" data-range="30d">30 días</button>
+                  <button class="ff-range-btn" data-range="90d">90 días</button>
+                  <button class="ff-range-btn" data-range="all">Todo</button>
+               </div>
+               <div class="ff-export-group">
+                  <button class="ff-btn ff-btn-outline ff-btn-small" id="ff-export-csv" aria-label="Exportar datos a CSV">
+                     <i class="fa fa-file-text-o" aria-hidden="true"></i> CSV
+                  </button>
+                  <button class="ff-btn ff-btn-outline ff-btn-small" id="ff-export-json" aria-label="Exportar datos a JSON">
+                     <i class="fa fa-download" aria-hidden="true"></i> JSON
+                  </button>
+               </div>
+            </div>
+
+            <!-- Contenedor dinámico del dashboard -->
+            <div id="ff-dashboard-content">
+
+               <!-- Tarjetas de métricas -->
+               <div class="ff-metrics-grid" role="region" aria-label="Resumen de métricas">
+                  <div class="ff-metric-card green">
+                     <div class="ff-metric-icon" aria-hidden="true"><i class="fa fa-check-circle"></i></div>
+                     <div class="ff-metric-value" id="ff-metric-completed">—</div>
+                     <div class="ff-metric-label">Sesiones completadas / iniciadas</div>
+                  </div>
+                  <div class="ff-metric-card green">
+                     <div class="ff-metric-icon" aria-hidden="true"><i class="fa fa-bar-chart"></i></div>
+                     <div class="ff-metric-value" id="ff-metric-rate">—</div>
+                     <div class="ff-metric-label">Tasa de finalización</div>
+                  </div>
+                  <div class="ff-metric-card blue">
+                     <div class="ff-metric-icon" aria-hidden="true"><i class="fa fa-clock-o"></i></div>
+                     <div class="ff-metric-value" id="ff-metric-focus-time">—</div>
+                     <div class="ff-metric-label">Tiempo en enfoque</div>
+                  </div>
+                  <div class="ff-metric-card amber">
+                     <div class="ff-metric-icon" aria-hidden="true"><i class="fa fa-exclamation-triangle"></i></div>
+                     <div class="ff-metric-value" id="ff-metric-interruptions">—</div>
+                     <div class="ff-metric-label">Interrupciones</div>
+                  </div>
+                  <div class="ff-metric-card red">
+                     <div class="ff-metric-icon" aria-hidden="true"><i class="fa fa-fire"></i></div>
+                     <div class="ff-metric-value" id="ff-metric-streak">—</div>
+                     <div class="ff-metric-label">Racha de días</div>
+                  </div>
+                  <div class="ff-metric-card blue">
+                     <div class="ff-metric-icon" aria-hidden="true"><i class="fa fa-line-chart"></i></div>
+                     <div class="ff-metric-value" id="ff-metric-avg">—</div>
+                     <div class="ff-metric-label">Promedio por sesión</div>
+                  </div>
+               </div>
+
+               <!-- Gráfico 1: Sesiones completadas vs iniciadas -->
+               <div class="ff-chart-card">
+                  <div class="ff-chart-canvas-wrapper">
+                     <canvas id="ff-chart-sessions" aria-label="Gráfico de sesiones completadas versus iniciadas por día" role="img"></canvas>
+                  </div>
+               </div>
+
+               <!-- Gráfico 2: Tiempo de enfoque por día -->
+               <div class="ff-chart-card">
+                  <div class="ff-chart-canvas-wrapper">
+                     <canvas id="ff-chart-focus" aria-label="Gráfico de minutos de enfoque por día" role="img"></canvas>
+                  </div>
+               </div>
+
+               <!-- Gráfico 3: Interrupciones por día -->
+               <div class="ff-chart-card">
+                  <div class="ff-chart-canvas-wrapper">
+                     <canvas id="ff-chart-interruptions" aria-label="Gráfico de interrupciones por día" role="img"></canvas>
+                  </div>
+               </div>
+
+            </div>
+            <!-- end ff-dashboard-content -->
+
+         </div>
+      </main>
+      <!-- end contenido principal -->
+
+      <!-- footer -->
+      <footer>
+         <div class="footer">
+            <div class="container">
+               <div class="row">
+                  <div class="col-md-12">
+                     <div class="cont">
+                        <h3><strong class="multi">FocusFlow</strong> Work</h3>
+                     </div>
+                  </div>
+
+               </div>
+            </div>
+            <div class="copyright">
+               <div class="container">
+                  <div class="row">
+                     <div class="col-md-12">
+                        <p class="ff-disclaimer">FocusFlow Work es una herramienta de apoyo a la productividad. No sustituye acompañamiento profesional.</p>
+                        <p>© 2026 FocusFlow Work</p>
+                     </div>
+                  </div>
+               </div>
+            </div>
+         </div>
+      </footer>
+      <!-- end footer -->
+
+      <!-- Javascript: plantilla base -->
+      <script src="js/jquery.min.js"></script>
+      <script src="js/popper.min.js"></script>
+      <script src="js/bootstrap.bundle.min.js"></script>
+      <script src="js/jquery-3.0.0.min.js"></script>
+      <script src="js/plugin.js"></script>
+      <script src="js/jquery.mCustomScrollbar.concat.min.js"></script>
+      <script src="js/custom.js"></script>
+
+      <!-- Javascript: FocusFlow -->
+      <script src="js/app/storage.js"></script>
+      <script src="js/app/notifications.js"></script>
+      <script src="js/app/focus-mode.js"></script>
+      <script src="js/app/main.js"></script>
+      <script src="js/app/dashboard.js"></script>
+
+      <!-- Lógica específica de la página del dashboard -->
+      <script>
+      (function () {
+        'use strict';
+
+        var rangeBtns    = document.querySelectorAll('.ff-range-btn');
+        var btnExportCSV  = document.getElementById('ff-export-csv');
+        var btnExportJSON = document.getElementById('ff-export-json');
+
+        // --- Filtro por rango ---
+        for (var i = 0; i < rangeBtns.length; i++) {
+          rangeBtns[i].addEventListener('click', function () {
+            for (var j = 0; j < rangeBtns.length; j++) {
+              rangeBtns[j].classList.remove('active');
+            }
+            this.classList.add('active');
+            Dashboard.render(this.getAttribute('data-range'));
+          });
+        }
+
+        // --- Exportar ---
+        btnExportCSV.addEventListener('click', function () {
+          Dashboard.exportCSV();
+        });
+
+        btnExportJSON.addEventListener('click', function () {
+          Dashboard.exportJSON();
+        });
+
+        // --- Renderizar al cargar ---
+        Dashboard.render('30d');
+
+      })();
+      </script>
+   </body>
+</html>

@@ -1,0 +1,641 @@
+<!DOCTYPE html>
+<html lang="es">
+   <head>
+      <meta charset="utf-8">
+      <meta http-equiv="X-UA-Compatible" content="IE=edge">
+      <meta name="viewport" content="width=device-width, initial-scale=1">
+      <title>Ajustes - FocusFlow Work</title>
+      <meta name="description" content="Configura tus preferencias de FocusFlow Work: duración, sonido, inactividad y tema.">
+      <!-- bootstrap css -->
+      <link rel="stylesheet" href="css/bootstrap.min.css">
+      <link rel="stylesheet" href="css/style.css">
+      <link rel="stylesheet" href="css/app/focusflow.css">
+      <link rel="stylesheet" href="css/responsive.css">
+      <link rel="icon" href="images/fevicon.png" type="image/gif">
+      <link rel="stylesheet" href="css/jquery.mCustomScrollbar.min.css">
+      <link rel="stylesheet" href="https://netdna.bootstrapcdn.com/font-awesome/4.0.3/css/font-awesome.css">
+
+      <style>
+        /* --- Formulario de ajustes --- */
+        .ff-settings-panel {
+          background: var(--ff-white);
+          border-radius: var(--ff-radius-lg);
+          padding: 36px 32px;
+          box-shadow: var(--ff-shadow);
+          max-width: 600px;
+          margin: 0 auto 36px;
+        }
+
+        .ff-settings-section {
+          margin-bottom: 28px;
+          padding-bottom: 24px;
+          border-bottom: 1px solid #eee;
+        }
+
+        .ff-settings-section:last-child {
+          border-bottom: none;
+          margin-bottom: 0;
+          padding-bottom: 0;
+        }
+
+        .ff-settings-section h3 {
+          font-family: var(--ff-font-heading);
+          font-size: 20px;
+          color: var(--ff-text);
+          margin-bottom: 16px;
+          padding: 0;
+          display: flex;
+          align-items: center;
+          gap: 10px;
+        }
+
+        .ff-settings-section h3 i {
+          color: var(--ff-primary);
+          font-size: 18px;
+        }
+
+        .ff-setting-row {
+          display: flex;
+          align-items: center;
+          justify-content: space-between;
+          gap: 16px;
+          padding: 10px 0;
+        }
+
+        .ff-setting-info {
+          flex: 1;
+        }
+
+        .ff-setting-label {
+          font-size: 15px;
+          font-weight: 600;
+          color: var(--ff-text);
+          display: block;
+          margin-bottom: 2px;
+        }
+
+        .ff-setting-desc {
+          font-size: 13px;
+          color: var(--ff-text-light);
+        }
+
+        /* --- Toggle switch --- */
+        .ff-toggle {
+          position: relative;
+          width: 52px;
+          height: 28px;
+          flex-shrink: 0;
+        }
+
+        .ff-toggle input {
+          opacity: 0;
+          width: 0;
+          height: 0;
+          position: absolute;
+        }
+
+        .ff-toggle-slider {
+          position: absolute;
+          cursor: pointer;
+          top: 0; left: 0; right: 0; bottom: 0;
+          background: #ccc;
+          border-radius: 28px;
+          transition: var(--ff-transition);
+        }
+
+        .ff-toggle-slider::before {
+          content: '';
+          position: absolute;
+          width: 22px;
+          height: 22px;
+          left: 3px;
+          bottom: 3px;
+          background: var(--ff-white);
+          border-radius: 50%;
+          transition: var(--ff-transition);
+        }
+
+        .ff-toggle input:checked + .ff-toggle-slider {
+          background: var(--ff-primary);
+        }
+
+        .ff-toggle input:checked + .ff-toggle-slider::before {
+          transform: translateX(24px);
+        }
+
+        .ff-toggle input:focus-visible + .ff-toggle-slider {
+          box-shadow: 0 0 0 3px rgba(8, 145, 248, 0.3);
+        }
+
+        /* --- Select / Input en settings --- */
+        .ff-setting-control select,
+        .ff-setting-control input[type="number"] {
+          padding: 8px 12px;
+          border: 2px solid #ddd;
+          border-radius: var(--ff-radius);
+          font-size: 15px;
+          font-family: var(--ff-font-body);
+          transition: var(--ff-transition);
+          min-width: 100px;
+          background: var(--ff-white);
+        }
+
+        .ff-setting-control select:focus,
+        .ff-setting-control input[type="number"]:focus {
+          border-color: var(--ff-primary);
+          outline: none;
+          box-shadow: 0 0 0 3px rgba(8, 145, 248, 0.15);
+        }
+
+        /* --- Perfil activo en header de settings --- */
+        .ff-active-profile-bar {
+          background: var(--ff-white);
+          border-radius: var(--ff-radius-lg);
+          padding: 16px 24px;
+          box-shadow: var(--ff-shadow);
+          max-width: 600px;
+          margin: 0 auto 24px;
+          display: flex;
+          align-items: center;
+          gap: 14px;
+        }
+
+        .ff-active-profile-bar .ff-avatar {
+          font-size: 30px;
+          line-height: 1;
+          color: var(--ff-primary);
+        }
+
+        .ff-active-profile-bar .ff-name {
+          font-family: var(--ff-font-heading);
+          font-size: 18px;
+          color: var(--ff-text);
+        }
+
+        .ff-active-profile-bar .ff-hint {
+          font-size: 13px;
+          color: var(--ff-text-light);
+        }
+
+        .ff-active-profile-bar .ff-spacer {
+          flex: 1;
+        }
+
+        /* --- Zona de datos --- */
+        .ff-data-actions {
+          display: flex;
+          gap: 10px;
+          flex-wrap: wrap;
+        }
+
+        .ff-saved-toast {
+          text-align: center;
+          color: var(--ff-green);
+          font-weight: 600;
+          font-size: 15px;
+          margin-top: 12px;
+          opacity: 0;
+          transition: opacity 0.3s ease;
+        }
+
+        .ff-saved-toast.visible {
+          opacity: 1;
+        }
+
+        /* --- Notificación de permisos --- */
+        .ff-notif-status {
+          display: inline-flex;
+          align-items: center;
+          gap: 6px;
+          font-size: 14px;
+          padding: 4px 12px;
+          border-radius: 20px;
+        }
+
+        .ff-notif-status.granted {
+          background: rgba(102, 187, 106, 0.12);
+          color: var(--ff-green);
+        }
+
+        .ff-notif-status.denied {
+          background: rgba(239, 83, 80, 0.1);
+          color: var(--ff-red);
+        }
+
+        .ff-notif-status.default {
+          background: rgba(255, 183, 77, 0.12);
+          color: var(--ff-amber);
+        }
+
+        @media (max-width: 576px) {
+          .ff-settings-panel { padding: 24px 16px; }
+          .ff-setting-row { flex-direction: column; align-items: flex-start; gap: 8px; }
+          .ff-active-profile-bar { flex-wrap: wrap; }
+        }
+      </style>
+   </head>
+   <body class="main-layout">
+      <!-- loader -->
+      <div class="loader_bg">
+         <div class="loader"><img src="images/loading.gif" alt="Cargando..." /></div>
+      </div>
+
+      <!-- header -->
+      <!-- Navbar -->
+      <nav class="ff-navbar" role="navigation" aria-label="Navegación principal">
+         <div class="ff-navbar-inner">
+            <a href="index.html" class="ff-navbar-logo">FocusFlow</a>
+            <ul class="ff-navbar-links" id="ff-nav-menu">
+               <li><a class="ff-nav-link" href="index.html">Inicio</a></li>
+               <li><a class="ff-nav-link" href="focus.html">Enfoque</a></li>
+               <li><a class="ff-nav-link" href="dashboard.html">Panel</a></li>
+               <li><a class="ff-nav-link" href="profile.html">Perfil</a></li>
+               <li><a class="ff-nav-link ff-active" href="settings.html" aria-current="page">Ajustes</a></li>
+            </ul>
+            <button class="ff-hamburger" id="ff-hamburger" aria-label="Abrir menú" aria-expanded="false" aria-controls="ff-nav-menu">
+               <span class="ff-hamburger-line"></span>
+               <span class="ff-hamburger-line"></span>
+               <span class="ff-hamburger-line"></span>
+            </button>
+         </div>
+         <div class="ff-navbar-wave" aria-hidden="true">
+            <svg viewBox="0 0 1440 20" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg">
+               <path d="M0,0 C360,20 1080,20 1440,0 L1440,0 L0,0 Z" fill="rgba(6,112,196,0.92)"/>
+            </svg>
+         </div>
+      </nav>
+      <div class="ff-nav-overlay" id="ff-nav-overlay"></div>
+
+      <!-- Contenido principal -->
+      <main class="ff-main" id="main-content">
+         <div class="container">
+
+            <div class="ff-page-title">
+               <h2>Ajustes</h2>
+               <p>Personaliza FocusFlow según tu forma de trabajar.</p>
+            </div>
+
+            <!-- Indicador de perfil activo -->
+            <div class="ff-active-profile-bar" id="ff-profile-bar">
+               <span class="ff-avatar" id="ff-bar-avatar"><i class="fa fa-user" aria-hidden="true"></i></span>
+               <div>
+                  <div class="ff-name" id="ff-bar-name">Usuario</div>
+                  <div class="ff-hint">Los ajustes se guardan para este perfil</div>
+               </div>
+               <div class="ff-spacer"></div>
+               <a href="profile.html" class="ff-btn ff-btn-outline ff-btn-small">
+                  <i class="fa fa-exchange" aria-hidden="true"></i> Cambiar perfil
+               </a>
+            </div>
+
+            <!-- Panel de ajustes -->
+            <div class="ff-settings-panel">
+
+               <!-- Sección: Temporizador -->
+               <div class="ff-settings-section">
+                  <h3><i class="fa fa-clock-o" aria-hidden="true"></i> Temporizador</h3>
+
+                  <div class="ff-setting-row">
+                     <div class="ff-setting-info">
+                        <span class="ff-setting-label">Preset por defecto</span>
+                        <span class="ff-setting-desc">Se seleccionará al abrir la página de enfoque.</span>
+                     </div>
+                     <div class="ff-setting-control">
+                        <select id="ff-pref-preset" aria-label="Preset de tiempo por defecto">
+                           <option value="15/5">15/5</option>
+                           <option value="25/5">25/5</option>
+                           <option value="50/10">50/10</option>
+                           <option value="90/20">90/20</option>
+                        </select>
+                     </div>
+                  </div>
+
+                  <div class="ff-setting-row">
+                     <div class="ff-setting-info">
+                        <span class="ff-setting-label">Sonido al finalizar</span>
+                        <span class="ff-setting-desc">Reproduce un tono suave cuando termina una sesión o descanso.</span>
+                     </div>
+                     <label class="ff-toggle" aria-label="Activar sonido al finalizar">
+                        <input type="checkbox" id="ff-pref-sound">
+                        <span class="ff-toggle-slider"></span>
+                     </label>
+                  </div>
+               </div>
+
+               <!-- Sección: Concentración -->
+               <div class="ff-settings-section">
+                  <h3><i class="fa fa-eye" aria-hidden="true"></i> Concentración</h3>
+
+                  <div class="ff-setting-row">
+                     <div class="ff-setting-info">
+                        <span class="ff-setting-label">Umbral de inactividad</span>
+                        <span class="ff-setting-desc">Minutos sin actividad antes de enviarte un recordatorio amable.</span>
+                     </div>
+                     <div class="ff-setting-control">
+                        <input type="number" id="ff-pref-inactivity" min="1" max="30" value="3" aria-label="Minutos de inactividad">
+                     </div>
+                  </div>
+               </div>
+
+               <!-- Sección: Notificaciones -->
+               <div class="ff-settings-section">
+                  <h3><i class="fa fa-bell-o" aria-hidden="true"></i> Notificaciones</h3>
+
+                  <div class="ff-setting-row">
+                     <div class="ff-setting-info">
+                        <span class="ff-setting-label">Permisos del navegador</span>
+                        <span class="ff-setting-desc">Las notificaciones te avisan aunque estés en otra pestaña.</span>
+                     </div>
+                     <div>
+                        <span class="ff-notif-status" id="ff-notif-status"></span>
+                        <button class="ff-btn ff-btn-outline ff-btn-small" id="ff-btn-request-notif" style="margin-left:8px; display:none;">
+                           Solicitar permiso
+                        </button>
+                     </div>
+                  </div>
+               </div>
+
+               <!-- Sección: Apariencia -->
+               <div class="ff-settings-section">
+                  <h3><i class="fa fa-adjust" aria-hidden="true"></i> Apariencia</h3>
+
+                  <div class="ff-setting-row">
+                     <div class="ff-setting-info">
+                        <span class="ff-setting-label">Tema</span>
+                        <span class="ff-setting-desc">Próximamente: modo oscuro para toda la aplicación.</span>
+                     </div>
+                     <div class="ff-setting-control">
+                        <select id="ff-pref-theme" aria-label="Tema de la aplicación">
+                           <option value="light">Claro</option>
+                           <option value="dark" disabled>Oscuro (próximamente)</option>
+                        </select>
+                     </div>
+                  </div>
+               </div>
+
+               <!-- Sección: Datos -->
+               <div class="ff-settings-section">
+                  <h3><i class="fa fa-database" aria-hidden="true"></i> Datos</h3>
+
+                  <div class="ff-setting-row">
+                     <div class="ff-setting-info">
+                        <span class="ff-setting-label">Gestión de datos</span>
+                        <span class="ff-setting-desc">Exporta o restablece los datos de tu perfil actual.</span>
+                     </div>
+                  </div>
+                  <div class="ff-data-actions">
+                     <button class="ff-btn ff-btn-outline ff-btn-small" id="ff-btn-export-json">
+                        <i class="fa fa-download" aria-hidden="true"></i> Exportar JSON
+                     </button>
+                     <button class="ff-btn ff-btn-outline ff-btn-small" id="ff-btn-export-csv">
+                        <i class="fa fa-file-text-o" aria-hidden="true"></i> Exportar CSV
+                     </button>
+                     <button class="ff-btn ff-btn-outline ff-btn-small" id="ff-btn-reset-data" style="color:var(--ff-red); border-color:var(--ff-red);">
+                        <i class="fa fa-trash-o" aria-hidden="true"></i> Borrar sesiones
+                     </button>
+                     <button class="ff-btn ff-btn-outline ff-btn-small" id="ff-btn-reset-prefs">
+                        <i class="fa fa-undo" aria-hidden="true"></i> Restablecer ajustes
+                     </button>
+                  </div>
+               </div>
+
+               <!-- Toast de guardado -->
+               <div class="ff-saved-toast" id="ff-saved-toast"><i class="fa fa-check"></i> Guardado</div>
+
+            </div>
+            <!-- end settings panel -->
+
+         </div>
+      </main>
+
+      <!-- footer -->
+      <footer>
+         <div class="footer">
+            <div class="container">
+               <div class="row">
+                  <div class="col-md-12">
+                     <div class="cont">
+                        <h3><strong class="multi">FocusFlow</strong> Work</h3>
+                     </div>
+                  </div>
+
+               </div>
+            </div>
+            <div class="copyright">
+               <div class="container">
+                  <div class="row">
+                     <div class="col-md-12">
+                        <p class="ff-disclaimer">FocusFlow Work es una herramienta de apoyo a la productividad. No sustituye acompañamiento profesional.</p>
+                        <p>© 2026 FocusFlow Work</p>
+                     </div>
+                  </div>
+               </div>
+            </div>
+         </div>
+      </footer>
+
+      <!-- Javascript: plantilla base -->
+      <script src="js/jquery.min.js"></script>
+      <script src="js/popper.min.js"></script>
+      <script src="js/bootstrap.bundle.min.js"></script>
+      <script src="js/jquery-3.0.0.min.js"></script>
+      <script src="js/plugin.js"></script>
+      <script src="js/jquery.mCustomScrollbar.concat.min.js"></script>
+      <script src="js/custom.js"></script>
+
+      <!-- Javascript: FocusFlow -->
+      <script src="js/app/storage.js"></script>
+      <script src="js/app/notifications.js"></script>
+      <script src="js/app/focus-mode.js"></script>
+      <script src="js/app/user-service.js"></script>
+      <script src="js/app/main.js"></script>
+
+      <script>
+      (function () {
+        'use strict';
+
+        // Referencias DOM
+        var barAvatar = document.getElementById('ff-bar-avatar');
+        var barName   = document.getElementById('ff-bar-name');
+
+        var prefPreset     = document.getElementById('ff-pref-preset');
+        var prefSound      = document.getElementById('ff-pref-sound');
+        var prefInactivity = document.getElementById('ff-pref-inactivity');
+        var prefTheme      = document.getElementById('ff-pref-theme');
+
+        var notifStatus    = document.getElementById('ff-notif-status');
+        var btnRequestNotif = document.getElementById('ff-btn-request-notif');
+
+        var btnExportJSON  = document.getElementById('ff-btn-export-json');
+        var btnExportCSV   = document.getElementById('ff-btn-export-csv');
+        var btnResetData   = document.getElementById('ff-btn-reset-data');
+        var btnResetPrefs  = document.getElementById('ff-btn-reset-prefs');
+
+        var savedToast = document.getElementById('ff-saved-toast');
+        var _toastTimeout = null;
+
+        // =====================================================================
+        // Cargar valores actuales
+        // =====================================================================
+        function loadCurrentValues() {
+          var user = UserService.getActive();
+          barAvatar.innerHTML = '<i class="fa ' + user.avatar + '" aria-hidden="true"></i>';
+          barName.textContent = user.name;
+
+          var prefs = UserService.getPreferences();
+          prefPreset.value = prefs.defaultPreset;
+          prefSound.checked = prefs.soundEnabled;
+          prefInactivity.value = prefs.inactivityThreshold;
+          prefTheme.value = prefs.theme;
+
+          _updateNotifStatus();
+        }
+
+        // =====================================================================
+        // Auto-guardar al cambiar cualquier control
+        // =====================================================================
+        function _save() {
+          UserService.updatePreferences({
+            defaultPreset: prefPreset.value,
+            soundEnabled: prefSound.checked,
+            inactivityThreshold: parseInt(prefInactivity.value, 10) || 3,
+            theme: prefTheme.value
+          });
+          _showSavedToast();
+        }
+
+        prefPreset.addEventListener('change', _save);
+        prefSound.addEventListener('change', _save);
+        prefInactivity.addEventListener('change', _save);
+        prefTheme.addEventListener('change', _save);
+
+        // Debounce para el input numérico (mientras escribe)
+        var _inactivityDebounce = null;
+        prefInactivity.addEventListener('input', function () {
+          clearTimeout(_inactivityDebounce);
+          _inactivityDebounce = setTimeout(_save, 500);
+        });
+
+        // =====================================================================
+        // Toast de confirmación
+        // =====================================================================
+        function _showSavedToast() {
+          clearTimeout(_toastTimeout);
+          savedToast.classList.add('visible');
+          _toastTimeout = setTimeout(function () {
+            savedToast.classList.remove('visible');
+          }, 2000);
+        }
+
+        // =====================================================================
+        // Estado de notificaciones del navegador
+        // =====================================================================
+        function _updateNotifStatus() {
+          if (!('Notification' in window)) {
+            notifStatus.textContent = 'No soportado';
+            notifStatus.className = 'ff-notif-status denied';
+            return;
+          }
+
+          var perm = Notification.permission;
+          if (perm === 'granted') {
+            notifStatus.innerHTML = '<i class="fa fa-check-circle"></i> Activadas';
+            notifStatus.className = 'ff-notif-status granted';
+            btnRequestNotif.style.display = 'none';
+          } else if (perm === 'denied') {
+            notifStatus.innerHTML = '<i class="fa fa-ban"></i> Bloqueadas';
+            notifStatus.className = 'ff-notif-status denied';
+            btnRequestNotif.style.display = 'none';
+          } else {
+            notifStatus.innerHTML = '<i class="fa fa-question-circle"></i> Sin decidir';
+            notifStatus.className = 'ff-notif-status default';
+            btnRequestNotif.style.display = '';
+          }
+        }
+
+        btnRequestNotif.addEventListener('click', function () {
+          NotificationService.showPermissionModal().then(function () {
+            _updateNotifStatus();
+          });
+        });
+
+        // =====================================================================
+        // Exportar datos
+        // =====================================================================
+        btnExportJSON.addEventListener('click', function () {
+          var sessions = UserService.getSessions();
+          var blob = new Blob([JSON.stringify(sessions, null, 2)], { type: 'application/json' });
+          _downloadBlob(blob, 'focusflow-sesiones.json');
+        });
+
+        btnExportCSV.addEventListener('click', function () {
+          var sessions = UserService.getSessions();
+          if (sessions.length === 0) {
+            NotificationService.showInPage('Sin datos', 'Aún no tienes sesiones para exportar.');
+            return;
+          }
+
+          var headers = ['Fecha','Duración (s)','Tiempo efectivo (s)','Completada','Preset','Pausas','Inactividades'];
+          var rows = sessions.map(function (s) {
+            return [
+              s.date || '',
+              s.duration || 0,
+              s.effectiveTime || 0,
+              s.completed ? 'Sí' : 'No',
+              s.preset || '',
+              s.pauseCount || 0,
+              s.inactivityEvents || 0
+            ].join(',');
+          });
+
+          var csv = headers.join(',') + '\n' + rows.join('\n');
+          var blob = new Blob(['\uFEFF' + csv], { type: 'text/csv;charset=utf-8' });
+          _downloadBlob(blob, 'focusflow-sesiones.csv');
+        });
+
+        function _downloadBlob(blob, filename) {
+          var url = URL.createObjectURL(blob);
+          var a = document.createElement('a');
+          a.href = url;
+          a.download = filename;
+          document.body.appendChild(a);
+          a.click();
+          setTimeout(function () {
+            document.body.removeChild(a);
+            URL.revokeObjectURL(url);
+          }, 100);
+        }
+
+        // =====================================================================
+        // Borrar sesiones
+        // =====================================================================
+        btnResetData.addEventListener('click', function () {
+          if (confirm('¿Borrar todas las sesiones de este perfil? Esta acción no se puede deshacer.')) {
+            var userId = UserService.getActiveUserId();
+            StorageService.setForUser(userId, 'sessions', []);
+            NotificationService.showInPage('Datos borrados', 'Las sesiones de este perfil han sido eliminadas.');
+          }
+        });
+
+        // =====================================================================
+        // Restablecer ajustes
+        // =====================================================================
+        btnResetPrefs.addEventListener('click', function () {
+          if (confirm('¿Restablecer todos los ajustes a los valores por defecto?')) {
+            var defaults = UserService.getDefaultPreferences();
+            UserService.updatePreferences(defaults);
+            loadCurrentValues();
+            _showSavedToast();
+            NotificationService.showInPage('Ajustes restablecidos', 'Se restauraron los valores por defecto.');
+          }
+        });
+
+        // =====================================================================
+        // Inicializar
+        // =====================================================================
+        loadCurrentValues();
+
+      })();
+      </script>
+   </body>
+</html>

@@ -1,0 +1,521 @@
+<!DOCTYPE html>
+<html lang="es">
+   <head>
+      <!-- basic -->
+      <meta charset="utf-8">
+      <meta http-equiv="X-UA-Compatible" content="IE=edge">
+      <!-- mobile metas -->
+      <meta name="viewport" content="width=device-width, initial-scale=1">
+      <!-- site metas -->
+      <title>Enfoque - FocusFlow Work</title>
+      <meta name="description" content="Temporizador de enfoque configurable para mejorar tu ritmo de trabajo y concentración.">
+      <meta name="author" content="FocusFlow Work">
+      <!-- bootstrap css -->
+      <link rel="stylesheet" href="css/bootstrap.min.css">
+      <!-- style css (plantilla base) -->
+      <link rel="stylesheet" href="css/style.css">
+      <!-- FocusFlow css -->
+      <link rel="stylesheet" href="css/app/focusflow.css">
+      <!-- Responsive -->
+      <link rel="stylesheet" href="css/responsive.css">
+      <!-- favicon -->
+      <link rel="icon" href="images/fevicon.png" type="image/gif">
+      <!-- Scrollbar Custom CSS -->
+      <link rel="stylesheet" href="css/jquery.mCustomScrollbar.min.css">
+      <!-- FontAwesome -->
+      <link rel="stylesheet" href="https://netdna.bootstrapcdn.com/font-awesome/4.0.3/css/font-awesome.css">
+   </head>
+   <!-- body -->
+   <body class="main-layout">
+      <!-- loader -->
+      <div class="loader_bg">
+         <div class="loader"><img src="images/loading.gif" alt="Cargando..." /></div>
+      </div>
+      <!-- end loader -->
+
+      <!-- header -->
+      <!-- Navbar -->
+      <nav class="ff-navbar" role="navigation" aria-label="Navegación principal">
+         <div class="ff-navbar-inner">
+            <a href="index.html" class="ff-navbar-logo">FocusFlow</a>
+            <ul class="ff-navbar-links" id="ff-nav-menu">
+               <li><a class="ff-nav-link" href="index.html">Inicio</a></li>
+               <li><a class="ff-nav-link ff-active" href="focus.html" aria-current="page">Enfoque</a></li>
+               <li><a class="ff-nav-link" href="dashboard.html">Panel</a></li>
+               <li><a class="ff-nav-link" href="profile.html">Perfil</a></li>
+               <li><a class="ff-nav-link" href="settings.html">Ajustes</a></li>
+            </ul>
+            <button class="ff-hamburger" id="ff-hamburger" aria-label="Abrir menú" aria-expanded="false" aria-controls="ff-nav-menu">
+               <span class="ff-hamburger-line"></span>
+               <span class="ff-hamburger-line"></span>
+               <span class="ff-hamburger-line"></span>
+            </button>
+         </div>
+         <div class="ff-navbar-wave" aria-hidden="true">
+            <svg viewBox="0 0 1440 20" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg">
+               <path d="M0,0 C360,20 1080,20 1440,0 L1440,0 L0,0 Z" fill="rgba(6,112,196,0.92)"/>
+            </svg>
+         </div>
+      </nav>
+      <div class="ff-nav-overlay" id="ff-nav-overlay"></div>
+      <!-- end header -->
+
+      <!-- Contenido principal -->
+      <main class="ff-main" id="main-content">
+         <div class="container">
+            <div class="row justify-content-center">
+               <div class="col-lg-8 col-md-10">
+
+                  <!-- Título de página -->
+                  <div class="ff-page-title">
+                     <h2>Sesión de enfoque</h2>
+                     <p>Elige un ritmo de trabajo y comienza cuando estés listo.</p>
+                  </div>
+
+                  <!-- Selector de presets -->
+                  <div class="ff-preset-bar" role="group" aria-label="Presets de tiempo">
+                     <button class="ff-preset-btn" data-preset="15/5" aria-label="15 minutos enfoque, 5 descanso">15/5</button>
+                     <button class="ff-preset-btn active" data-preset="25/5" aria-label="25 minutos enfoque, 5 descanso">25/5</button>
+                     <button class="ff-preset-btn" data-preset="50/10" aria-label="50 minutos enfoque, 10 descanso">50/10</button>
+                     <button class="ff-preset-btn" data-preset="90/20" aria-label="90 minutos enfoque, 20 descanso">90/20</button>
+                     <button class="ff-preset-btn" data-preset="custom" aria-label="Configurar tiempo personalizado">
+                        <i class="fa fa-sliders" aria-hidden="true"></i> Personalizar
+                     </button>
+                  </div>
+
+                  <!-- Tiempo personalizado (oculto por defecto) -->
+                  <div class="ff-custom-time" id="ff-custom-panel" style="display: none;" role="group" aria-label="Tiempo personalizado">
+                     <label for="ff-custom-focus" class="ff-sr-only">Minutos de enfoque</label>
+                     <input type="number" id="ff-custom-focus" min="1" max="180" value="25" aria-label="Minutos de enfoque">
+                     <span>min enfoque</span>
+                     <label for="ff-custom-break" class="ff-sr-only">Minutos de descanso</label>
+                     <input type="number" id="ff-custom-break" min="1" max="60" value="5" aria-label="Minutos de descanso">
+                     <span>min descanso</span>
+                     <button class="ff-btn ff-btn-primary ff-btn-small" id="ff-apply-custom">Aplicar</button>
+                  </div>
+
+                  <!-- Temporizador -->
+                  <div class="ff-timer-area">
+                     <div class="ff-timer-container" id="ff-timer-container" role="timer" aria-label="Temporizador de enfoque">
+                        <svg class="ff-timer-svg" viewBox="0 0 200 200" aria-hidden="true">
+                           <circle class="ff-timer-track" cx="100" cy="100" r="90"
+                                   fill="none" stroke-width="6"/>
+                           <circle class="ff-timer-progress" id="ff-progress-ring" cx="100" cy="100" r="90"
+                                   fill="none" stroke-width="6" stroke-linecap="round"
+                                   stroke-dasharray="565.49" stroke-dashoffset="0"/>
+                        </svg>
+                        <div class="ff-timer-text">
+                           <span class="ff-timer-time" id="ff-time-display" aria-live="off">25:00</span>
+                           <span class="ff-timer-label" id="ff-session-label">Enfoque</span>
+                        </div>
+                     </div>
+                  </div>
+
+                  <!-- Región para anuncios de accesibilidad -->
+                  <div class="ff-sr-only" aria-live="polite" aria-atomic="true" id="ff-timer-announcer"></div>
+
+                  <!-- Controles -->
+                  <div class="ff-controls" role="group" aria-label="Controles del temporizador">
+                     <button class="ff-btn ff-btn-primary" id="ff-btn-start" aria-label="Iniciar sesión de enfoque">
+                        <i class="fa fa-play" aria-hidden="true"></i> Iniciar
+                     </button>
+                     <button class="ff-btn ff-btn-secondary" id="ff-btn-pause" style="display:none" aria-label="Pausar temporizador">
+                        <i class="fa fa-pause" aria-hidden="true"></i> Pausar
+                     </button>
+                     <button class="ff-btn ff-btn-primary" id="ff-btn-resume" style="display:none" aria-label="Reanudar temporizador">
+                        <i class="fa fa-play" aria-hidden="true"></i> Reanudar
+                     </button>
+                     <button class="ff-btn ff-btn-outline" id="ff-btn-reset" style="display:none" aria-label="Reiniciar temporizador">
+                        <i class="fa fa-refresh" aria-hidden="true"></i> Reiniciar
+                     </button>
+                     <button class="ff-btn ff-btn-outline" id="ff-btn-skip" style="display:none" aria-label="Saltar al descanso">
+                        <i class="fa fa-forward" aria-hidden="true"></i> Ir a descanso
+                     </button>
+                  </div>
+
+                  <!-- Contador de sesiones -->
+                  <div class="ff-session-counter" aria-label="Sesiones completadas hoy">
+                     <span>Sesiones completadas hoy: </span>
+                     <strong id="ff-session-count">0</strong>
+                  </div>
+
+                  <!-- Toggle modo enfoque -->
+                  <div class="ff-focus-toggle">
+                     <button class="ff-btn ff-btn-dark" id="ff-btn-focus-mode" aria-label="Activar modo enfoque minimalista. Atajo: tecla F">
+                        <i class="fa fa-expand" aria-hidden="true"></i> Modo enfoque <kbd>F</kbd>
+                     </button>
+                  </div>
+
+               </div>
+            </div>
+         </div>
+
+         <!-- Indicador de salir del modo enfoque -->
+         <div class="ff-focus-exit-hint" aria-hidden="true">Pulsa <kbd>F</kbd> para salir</div>
+      </main>
+      <!-- end contenido principal -->
+
+      <!-- footer -->
+      <footer>
+         <div class="footer">
+            <div class="container">
+               <div class="row">
+                  <div class="col-md-12">
+                     <div class="cont">
+                        <h3><strong class="multi">FocusFlow</strong> Work</h3>
+                     </div>
+                  </div>
+
+               </div>
+            </div>
+            <div class="copyright">
+               <div class="container">
+                  <div class="row">
+                     <div class="col-md-12">
+                        <p class="ff-disclaimer">FocusFlow Work es una herramienta de apoyo a la productividad. No sustituye acompañamiento profesional.</p>
+                        <p>© 2026 FocusFlow Work</p>
+                     </div>
+                  </div>
+               </div>
+            </div>
+         </div>
+      </footer>
+      <!-- end footer -->
+
+      <!-- Javascript: plantilla base -->
+      <script src="js/jquery.min.js"></script>
+      <script src="js/popper.min.js"></script>
+      <script src="js/bootstrap.bundle.min.js"></script>
+      <script src="js/jquery-3.0.0.min.js"></script>
+      <script src="js/plugin.js"></script>
+      <script src="js/jquery.mCustomScrollbar.concat.min.js"></script>
+      <script src="js/custom.js"></script>
+
+      <!-- Javascript: FocusFlow (orden importa) -->
+      <script src="js/app/storage.js"></script>
+      <script src="js/app/notifications.js"></script>
+      <script src="js/app/inactivity.js"></script>
+      <script src="js/app/timer.js"></script>
+      <script src="js/app/focus-mode.js"></script>
+      <script src="js/app/main.js"></script>
+
+      <!-- Lógica específica de la página de enfoque -->
+      <script>
+      (function () {
+        'use strict';
+
+        // =====================================================================
+        // Referencias al DOM
+        // =====================================================================
+        var timerContainer = document.getElementById('ff-timer-container');
+        var progressRing   = document.getElementById('ff-progress-ring');
+        var timeDisplay    = document.getElementById('ff-time-display');
+        var sessionLabel   = document.getElementById('ff-session-label');
+        var sessionCount   = document.getElementById('ff-session-count');
+        var announcer      = document.getElementById('ff-timer-announcer');
+
+        var btnStart  = document.getElementById('ff-btn-start');
+        var btnPause  = document.getElementById('ff-btn-pause');
+        var btnResume = document.getElementById('ff-btn-resume');
+        var btnReset  = document.getElementById('ff-btn-reset');
+        var btnSkip   = document.getElementById('ff-btn-skip');
+        var btnFocus  = document.getElementById('ff-btn-focus-mode');
+
+        var presetBtns     = document.querySelectorAll('.ff-preset-btn');
+        var customPanel    = document.getElementById('ff-custom-panel');
+        var customFocusIn  = document.getElementById('ff-custom-focus');
+        var customBreakIn  = document.getElementById('ff-custom-break');
+        var btnApplyCustom = document.getElementById('ff-apply-custom');
+
+        var CIRCUMFERENCE = 2 * Math.PI * 90; // ≈ 565.49
+
+        // Umbrales para anunciar a screen readers (evitar anunciar cada segundo)
+        var _lastAnnounced = null;
+
+        // =====================================================================
+        // Callbacks del temporizador
+        // =====================================================================
+        FocusTimer.on('tick', function (data) {
+          _updateTimerUI(data);
+          _maybeAnnounce(data);
+        });
+
+        FocusTimer.on('stateChange', function (state) {
+          _updateButtons(state);
+        });
+
+        FocusTimer.on('complete', function (data) {
+          _handleCompletion(data);
+        });
+
+        // =====================================================================
+        // Actualizar UI del temporizador
+        // =====================================================================
+        function _updateTimerUI(data) {
+          // Tiempo
+          timeDisplay.textContent = data.formatted;
+
+          // Progreso SVG
+          var offset = data.progress * CIRCUMFERENCE;
+          progressRing.style.strokeDashoffset = offset;
+          progressRing.style.stroke = data.color;
+
+          // Etiqueta de sesión
+          sessionLabel.textContent = data.isBreak ? 'Descanso' : 'Enfoque';
+
+          // Efecto pulso en los últimos 60 s
+          if (data.pulse) {
+            timerContainer.classList.add('ff-timer-pulse');
+          } else {
+            timerContainer.classList.remove('ff-timer-pulse');
+          }
+
+          // Color del borde del contenedor
+          timerContainer.style.borderColor = data.color;
+        }
+
+        // =====================================================================
+        // Anuncios accesibles (solo en cambios significativos)
+        // =====================================================================
+        function _maybeAnnounce(data) {
+          var mins = Math.floor(data.remaining / 60);
+          var label = data.isBreak ? 'descanso' : 'enfoque';
+
+          // Anunciar en minutos redondos, 1 minuto, y 30 segundos
+          var shouldAnnounce = false;
+          if (data.remaining === 60 && _lastAnnounced !== 60) {
+            announcer.textContent = 'Queda 1 minuto de ' + label + '.';
+            _lastAnnounced = 60;
+          } else if (data.remaining === 30 && _lastAnnounced !== 30) {
+            announcer.textContent = '30 segundos restantes de ' + label + '.';
+            _lastAnnounced = 30;
+          } else if (data.remaining > 60 && data.remaining % 300 === 0 && _lastAnnounced !== data.remaining) {
+            announcer.textContent = mins + ' minutos restantes de ' + label + '.';
+            _lastAnnounced = data.remaining;
+          }
+        }
+
+        // =====================================================================
+        // Actualizar visibilidad de botones según estado
+        // =====================================================================
+        function _updateButtons(state) {
+          var timerState = FocusTimer.getState();
+          var isIdle    = state === FocusTimer.STATES.IDLE;
+          var isRunning = state === FocusTimer.STATES.RUNNING;
+          var isPaused  = state === FocusTimer.STATES.PAUSED;
+
+          btnStart.style.display  = isIdle ? '' : 'none';
+          btnPause.style.display  = isRunning ? '' : 'none';
+          btnResume.style.display = isPaused ? '' : 'none';
+          btnReset.style.display  = (isRunning || isPaused) ? '' : 'none';
+          btnSkip.style.display   = (isRunning || isPaused) && !timerState.isBreak ? '' : 'none';
+
+          // Deshabilitar presets mientras corre
+          for (var i = 0; i < presetBtns.length; i++) {
+            presetBtns[i].disabled = isRunning || isPaused;
+          }
+        }
+
+        // =====================================================================
+        // Manejar finalización de sesión/descanso
+        // =====================================================================
+        function _handleCompletion(data) {
+          // Animación con Animate.css
+          timerContainer.classList.add('animated', 'pulse');
+          setTimeout(function () {
+            timerContainer.classList.remove('animated', 'pulse');
+          }, 1000);
+
+          // Notificación
+          if (data.type === 'focus') {
+            var msg = data.sessionsCompleted === 1
+              ? '¡Buen trabajo! Has completado tu primera sesión. Es momento de un descanso.'
+              : '¡Excelente! Llevas ' + data.sessionsCompleted + ' sesiones. Tómate un descanso.';
+            NotificationService.send('Sesión completada', msg);
+            announcer.textContent = msg;
+          } else {
+            NotificationService.send('Descanso terminado', '¿Listo para otra sesión de enfoque?');
+            announcer.textContent = 'Tu descanso ha terminado. Puedes iniciar una nueva sesión de enfoque.';
+          }
+
+          // Actualizar contador
+          _updateSessionCount();
+
+          // Detener detección de inactividad
+          InactivityDetector.stop();
+
+          // Refrescar UI con nuevo estado
+          var newState = FocusTimer.getState();
+          _updateTimerUI(newState);
+          _updateButtons(newState.state);
+        }
+
+        // =====================================================================
+        // Contador de sesiones del día
+        // =====================================================================
+        function _updateSessionCount() {
+          var activeUser = StorageService.get('active_user') || 'default';
+          var sessions = StorageService.getForUser(activeUser, 'sessions') || [];
+          var today = new Date().toISOString().slice(0, 10);
+          var count = 0;
+          for (var i = 0; i < sessions.length; i++) {
+            if (sessions[i].completed && sessions[i].date && sessions[i].date.indexOf(today) === 0) {
+              count++;
+            }
+          }
+          sessionCount.textContent = count;
+        }
+
+        // =====================================================================
+        // Detección de inactividad vinculada al temporizador
+        // =====================================================================
+        function _startInactivityDetection() {
+          var activeUser = StorageService.get('active_user') || 'default';
+          var prefs = StorageService.getForUser(activeUser, 'preferences') || {};
+          var thresholdMin = prefs.inactivityThreshold || 3;
+
+          InactivityDetector.start({
+            threshold: thresholdMin * 60 * 1000,
+            onInactivity: function () {
+              NotificationService.send(
+                '¿Sigues por aquí?',
+                'Tu sesión de enfoque está corriendo. ¡Ánimo, puedes retomar el ritmo!'
+              );
+            },
+            onActivity: function () {
+              // El usuario volvió; no se necesita acción adicional
+            }
+          });
+        }
+
+        // =====================================================================
+        // Listeners de botones de control
+        // =====================================================================
+        btnStart.addEventListener('click', function () {
+          FocusTimer.start();
+          if (!FocusTimer.getState().isBreak) {
+            _startInactivityDetection();
+          }
+          announcer.textContent = FocusTimer.getState().isBreak
+            ? 'Descanso iniciado.'
+            : 'Sesión de enfoque iniciada.';
+        });
+
+        btnPause.addEventListener('click', function () {
+          FocusTimer.pause();
+          InactivityDetector.stop();
+          announcer.textContent = 'Temporizador en pausa.';
+        });
+
+        btnResume.addEventListener('click', function () {
+          FocusTimer.resume();
+          if (!FocusTimer.getState().isBreak) {
+            _startInactivityDetection();
+          }
+          announcer.textContent = 'Temporizador reanudado.';
+        });
+
+        btnReset.addEventListener('click', function () {
+          FocusTimer.reset();
+          InactivityDetector.stop();
+          _lastAnnounced = null;
+          announcer.textContent = 'Temporizador reiniciado.';
+        });
+
+        btnSkip.addEventListener('click', function () {
+          FocusTimer.skipToBreak();
+          InactivityDetector.stop();
+          announcer.textContent = 'Sesión completada. Descanso preparado.';
+          _updateSessionCount();
+        });
+
+        btnFocus.addEventListener('click', function () {
+          FocusMode.toggle();
+        });
+
+        // =====================================================================
+        // Listeners de presets
+        // =====================================================================
+        for (var i = 0; i < presetBtns.length; i++) {
+          presetBtns[i].addEventListener('click', function () {
+            var preset = this.getAttribute('data-preset');
+
+            if (preset === 'custom') {
+              customPanel.style.display = customPanel.style.display === 'none' ? 'flex' : 'none';
+              return;
+            }
+
+            customPanel.style.display = 'none';
+            for (var j = 0; j < presetBtns.length; j++) {
+              presetBtns[j].classList.remove('active');
+            }
+            this.classList.add('active');
+            FocusTimer.setPreset(preset);
+
+            var state = FocusTimer.getState();
+            _updateTimerUI(state);
+            announcer.textContent = 'Preset ' + preset + ' seleccionado.';
+          });
+        }
+
+        // Aplicar tiempo personalizado
+        btnApplyCustom.addEventListener('click', function () {
+          var focusMin = parseInt(customFocusIn.value, 10) || 25;
+          var breakMin = parseInt(customBreakIn.value, 10) || 5;
+
+          FocusTimer.setCustomTime(focusMin, breakMin);
+
+          for (var j = 0; j < presetBtns.length; j++) {
+            presetBtns[j].classList.remove('active');
+          }
+          var customBtn = document.querySelector('[data-preset="custom"]');
+          if (customBtn) customBtn.classList.add('active');
+
+          var state = FocusTimer.getState();
+          _updateTimerUI(state);
+          announcer.textContent = 'Tiempo personalizado: ' + focusMin + ' minutos enfoque, ' + breakMin + ' minutos descanso.';
+        });
+
+        // =====================================================================
+        // Inicialización de la página
+        // =====================================================================
+
+        // Intentar restaurar estado persistido (recarga de página)
+        var restored = FocusTimer.restoreState();
+
+        if (!restored) {
+          // Cargar preset por defecto del usuario
+          var activeUser = StorageService.get('active_user') || 'default';
+          var prefs = StorageService.getForUser(activeUser, 'preferences') || {};
+          var defaultPreset = prefs.defaultPreset || '25/5';
+          FocusTimer.setPreset(defaultPreset);
+
+          // Marcar botón activo
+          for (var k = 0; k < presetBtns.length; k++) {
+            var isActive = presetBtns[k].getAttribute('data-preset') === defaultPreset;
+            presetBtns[k].classList.toggle('active', isActive);
+          }
+        } else {
+          // Marcar botón del preset restaurado
+          var currentPreset = FocusTimer.getState().preset;
+          for (var k = 0; k < presetBtns.length; k++) {
+            var isActive = presetBtns[k].getAttribute('data-preset') === currentPreset;
+            presetBtns[k].classList.toggle('active', isActive);
+          }
+        }
+
+        // Renderizar estado inicial
+        var initialState = FocusTimer.getState();
+        _updateTimerUI(initialState);
+        _updateButtons(initialState.state);
+        _updateSessionCount();
+
+        // Si el temporizador estaba corriendo al recargar, reactivar detección
+        if (initialState.state === FocusTimer.STATES.RUNNING && !initialState.isBreak) {
+          _startInactivityDetection();
+        }
+
+      })();
+      </script>
+   </body>
+</html>
