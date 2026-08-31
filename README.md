@@ -2,6 +2,9 @@
 
 ## Introducción
 
+Coauthored with @mariana-ruge01
+
+
 La **Integración Continua (CI)** y el **Despliegue Continuo (CD)** son prácticas de desarrollo de software que buscan automatizar la integración de código, su validación y su despliegue. Las **pruebas automatizadas** son el corazón de estos procesos: sin ellas, CI/CD pierde gran parte de su valor, ya que no habría forma confiable de saber si un cambio rompe algo antes de llegar a producción.
 
 ---
